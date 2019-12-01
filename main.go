@@ -48,9 +48,12 @@ func mssgServer() {
 		Body:            []byte("Hello world!"),
 	}
 
-	err := ch.Publish("", qu.Name, false, false, mssg)
+	// will keep sending messages until programme forcibly exited
+	for {
+		err := ch.Publish("", qu.Name, false, false, mssg)
+		failOnError(err, "Failed to publish message to rabbit.")
 
-	failOnError(err, "Failed to publish message to rabbit.")
+	}
 
 }
 
@@ -97,5 +100,9 @@ func main() {
 	// Message server and client run as go routines to allow continuous execution
 	go mssgServer()
 	go mssgServer()
-	
+
+	// keep main go routine running so that we can obserce the others executing
+	var st string
+	fmt.Scanln(&st)
+
 }

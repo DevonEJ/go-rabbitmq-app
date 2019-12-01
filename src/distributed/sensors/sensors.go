@@ -6,6 +6,9 @@ import (
 	"math/rand"
 	"time"
 	"strconv"
+	"encoding/gob"
+	"./distributed/dto"
+
 )
 
 // Capture details desired sensor from cli flags

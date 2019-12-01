@@ -8,6 +8,31 @@ import (
 	"github.com/streadway/amqp"
 )
 
+func mssgClient() {
+
+	conn, ch, qu := getQueue()
+
+	defer conn.Close()
+	defer ch.Close()
+
+	mssgs, err := ch.Consume(
+		qu.Name,
+		"", // Name of consuming client - if tracking
+		true, // auto acknowledge receipt of message, and so remove from queue
+		false, // True if client should be exclusive consumer of this queue
+		false, // disables local host
+		false,
+		nil,
+		)
+
+	failOnError(err, "Failed to receive messages.")
+
+	for mssg := range mssgs {
+		fmt.Println("This is the message: ", mssg.Body)
+	}
+
+}
+
 // Send messages to rabbit
 func mssgServer() {
 	// Get connection to queue
@@ -69,5 +94,8 @@ func failOnError(err error, msg string) {
 
 
 func main() {
-	mssgServer()
+	// Message server and client run as go routines to allow continuous execution
+	go mssgServer()
+	go mssgServer()
+	
 }

@@ -68,7 +68,6 @@ func failOnError(err error, msg string) {
 
 
 
-func main {
-
-
+func main() {
+	mssgServer()
 }

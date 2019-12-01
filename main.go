@@ -8,7 +8,7 @@ import (
 	"github.com/streadway/amqp"
 )
 
-
+// Send messages to rabbit
 func mssgServer() {
 	// Get connection to queue
 	conn, ch, qu := getQueue()
@@ -18,21 +18,15 @@ func mssgServer() {
 
 	// Define message struct to send to rabbit exchange
 	mssg := amqp.Publishing{
-		Headers:         nil,
-		ContentType:     "",
-		ContentEncoding: "",
-		DeliveryMode:    0,
-		Priority:        0,
-		CorrelationId:   "",
-		ReplyTo:         "",
-		Expiration:      "",
-		MessageId:       "",
+		ContentType:     "text/plain",
 		Timestamp:       time.Time{},
-		Type:            "",
-		UserId:          "",
-		AppId:           "",
-		Body:            nil,
+		Body:            []byte("Hello world!"),
 	}
+
+	err := ch.Publish("", qu.Name, false, false, mssg)
+
+	failOnError(err, "Failed to publish message to rabbit.")
+
 }
 
 

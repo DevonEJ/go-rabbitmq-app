@@ -2,6 +2,9 @@ package main
 
 import (
 	"flag"
+	"math/rand"
+	"time"
+	"strconv"
 )
 
 // Capture details desired sensor from cli flags
@@ -17,4 +20,25 @@ func main() {
 	// Parse command line flags for sensors
 	flag.Parse()
 
+	// Create input data - use nanosecond seed to ensure unique
+	var ran = rand.New(rand.NewSource(time.Now().UnixNano()))
+
+	var reading = ran.Float64()*(*max-*min) + *min
+
+
+	// Create duration and signal from desired frequency of reading recording
+	duration , _ := time.ParseDuration(strconv.Itoa(1000/int(*freq)) + "ms")
+	signal := time.Tick(duration)
+
+	for range signal {
+		calcReading()
+
+	}
+
+
+}
+
+
+func calcReading() {
+	
 }
